@@ -160,7 +160,18 @@ subsample to the paper's exact 5,913 images and class counts, seed 229.
 
 ## Setup
 
-Requires Python 3.12 and an NVIDIA GPU (tested on an RTX 4050, 6 GB).
+**Prerequisites**
+
+| | |
+|---|---|
+| Python | 3.12 (system 3.13+ has no PyTorch wheels yet) |
+| GPU | NVIDIA with ~6 GB VRAM — tested on an RTX 4050 laptop |
+| Disk | ~12 GB free (~20 GB if you build the production model) |
+| RAM | 8 GB free |
+| Dataset | **must be downloaded first — see the Dataset section above** |
+
+Without a GPU everything still runs on CPU, but feature extraction takes
+minutes rather than seconds and the classical baselines are slow.
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -171,6 +182,9 @@ uv pip install -r requirements.txt
 ---
 
 ## Running
+
+Run these in order from the repository root. Step 1 must come first; the rest
+depend on the files it writes.
 
 ```bash
 # 1. Build the splits (expects both zips in data/raw/)
@@ -217,7 +231,19 @@ Add `--show` to open the figure, `--seed N` to reproduce a particular sample,
 production one, `--size 224` for the paper's input resolution.
 
 Runtimes on the reference machine: data preparation ~3 min, baselines ~4 min,
-feature extraction 11 s, head training ~20 s, learning curve ~6 min.
+feature extraction 11 s, head training ~20 s, learning curve ~6 min,
+production model ~6 min including re-extracting the source archive.
+
+### If something goes wrong
+
+| Symptom | Cause |
+|---|---|
+| `Missing [...] in data/raw/extracted` | the dataset zips are not in `data/raw/` |
+| `BadZipFile` | truncated download — check the byte counts above and refetch |
+| `incv3_*.npy missing` | run `inception_transfer.py --extract` before `--train` |
+| `head_full_299.pt not found` | run `train_full.py`, or pass `--repro` to the demo |
+| `CUDA out of memory` | close other GPU programs; the baselines need ~4 GB VRAM |
+| Machine swaps during baselines | expected on <8 GB free RAM; the GPU path keeps host RAM under 2 GB |
 
 ---
 
