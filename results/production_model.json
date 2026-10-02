@@ -1,0 +1,25 @@
+{
+  "model": "InceptionV3 frozen + FC/softmax, all data, 299px",
+  "n_train": 11219,
+  "input_size": 299,
+  "seeds": 3,
+  "val_acc_mean": 0.8226,
+  "val_acc_std": 0.0073,
+  "test_acc_mean": 0.8269,
+  "test_acc_std": 0.0047,
+  "test_confusion": [
+    [
+      601,
+      114
+    ],
+    [
+      136,
+      609
+    ]
+  ],
+  "damaged_precision": 0.8423,
+  "damaged_recall": 0.8174,
+  "lr": 0.01,
+  "batch": 100,
+  "iters": 4000
+}

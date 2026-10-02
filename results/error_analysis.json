@@ -1,0 +1,36 @@
+{
+  "val": {
+    "accuracy": 0.7956,
+    "confusion": [
+      [
+        255,
+        61
+      ],
+      [
+        60,
+        216
+      ]
+    ],
+    "damaged_precision": 0.7798,
+    "damaged_recall": 0.7826,
+    "n": 592
+  },
+  "test": {
+    "accuracy": 0.8123,
+    "confusion": [
+      [
+        581,
+        134
+      ],
+      [
+        140,
+        605
+      ]
+    ],
+    "damaged_precision": 0.8187,
+    "damaged_recall": 0.8121,
+    "n": 1460
+  },
+  "paper_confusion_accuracy": 0.797,
+  "paper_reported_val_acc": 0.83
+}
