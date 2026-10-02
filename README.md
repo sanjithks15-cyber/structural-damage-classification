@@ -46,7 +46,26 @@ Validation accuracy on 592 images. Majority-class baseline: **53.4%**.
 | *— same, 299×299 input (ours)* | — | — | 87.6% | **81.8%** |
 | *— SVM on all 5,321 images (ours)* | — | — | 94.9% | 57.8% |
 
-**Held-out test set (1,460 images, not used by the paper): 81.2%**
+### Production model
+
+The table above is the *reproduction*, restricted to the paper's settings so
+the comparison is like-for-like. Removing its two incidental limitations — the
+dataset has more than doubled since 2018, and InceptionV3 expects 299×299
+inputs rather than the 224×224 the paper fed it — gives:
+
+| | Training images | Input | Held-out test |
+|---|---|---|---|
+| Reproduction | 5,321 | 224 | 81.2% |
+| + native resolution | 5,321 | 299 | 82.3% |
+| **Production** | **11,219** | **299** | **82.7% ± 0.5** |
+
+Damaged-class recall is **81.7%**, against the paper's 74.9%. For triage that
+is the figure of merit — the fraction of damaged structures not missed.
+
+All three are measured on the same untouched 1,460-image Φ-Net test split. The
+paper's 83.0% was validation accuracy on a set it also used to make modelling
+decisions, and our seeds vary validation accuracy by 1.7 points, so a
+single-run figure on a set that size carries at least a point of noise.
 
 Confusion matrices:
 
@@ -71,6 +90,9 @@ The paper's Table 1 reports 83.0%, but its own §5.3 confusion matrix implies
 ---
 
 ## Findings
+
+**0. The best model reaches 82.7% ± 0.5 on a genuinely held-out test set**,
+which the paper had none of.
 
 **1. The paper's central claim reproduces.** Classical models on raw pixels are
 indistinguishable from a constant guess (50–54% against a 53.4% baseline)
@@ -170,6 +192,10 @@ uv pip install -r requirements.txt
 .venv/bin/python repro/learning_curve.py --seeds 3
 .venv/bin/python repro/error_analysis.py
 
+# 6. Production model: all available data, native resolution
+.venv/bin/python repro/extract_pool_features.py --size 299   # needs 7.1 GB temporarily
+.venv/bin/python repro/train_full.py --size 299 --seeds 3
+
 # optional: export every image as a browsable JPEG
 .venv/bin/python repro/export_images.py
 ```
@@ -187,7 +213,8 @@ seconds — no training, no network.
 ```
 
 Add `--show` to open the figure, `--seed N` to reproduce a particular sample,
-`--size 224` to use the paper's input resolution instead of 299.
+`--repro` to run the paper-matched reproduction model instead of the
+production one, `--size 224` for the paper's input resolution.
 
 Runtimes on the reference machine: data preparation ~3 min, baselines ~4 min,
 feature extraction 11 s, head training ~20 s, learning curve ~6 min.
@@ -213,6 +240,10 @@ repro/           all analysis code (written for this study)
   inception_transfer.py frozen InceptionV3 + FC head
   learning_curve.py     bias/variance diagnostic
   error_analysis.py     confusion matrices and error galleries
+  extract_pool_features.py  features for all 11,811 pool images
+  train_full.py         production model: all data, native resolution
+  make_writeup.py       generates docs/writeup.pdf from results/*.json
+  demo.py               live demonstration
   export_images.py      dataset → browsable JPEGs
 docs/paper_spec.md   full specification extracted from the paper
 results/             metrics (JSON), cached features, figures

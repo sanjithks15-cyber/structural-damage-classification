@@ -47,13 +47,22 @@ FIGS = RESULTS / "figures"
 CLASSES = ["undamaged", "damaged"]
 
 
-def load_head(size):
-    path = RESULTS / f"head_incv3_{size}.pt"
+def load_head(size, repro=False):
+    """Load a trained classifier head.
+
+    Default is the production model: trained on all 11,219 available images at
+    299px. `repro=True` loads the paper-matched reproduction instead (5,321
+    images), for showing the comparison.
+    """
+    if repro:
+        path = RESULTS / f"head_incv3_{size}.pt"
+        hint = (f"python repro/inception_transfer.py --extract --train "
+                f"--size {size}")
+    else:
+        path = RESULTS / f"head_full_{size}.pt"
+        hint = f"python repro/train_full.py --size {size}"
     if not path.exists():
-        raise SystemExit(
-            f"{path} not found.\nTrain it first:\n"
-            f"  python repro/inception_transfer.py --extract --train "
-            f"--size {size}")
+        raise SystemExit(f"{path} not found.\nTrain it first:\n  {hint}")
     head = nn.Linear(2048, 2).to(DEV)
     head.load_state_dict(torch.load(path, map_location=DEV))
     head.eval()
@@ -94,12 +103,16 @@ def show_grid(imgs, titles, suptitle, out, show=False, cols=4):
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def banner(size):
-    print("=" * 66)
+def banner(size, repro=False):
+    which = ("reproduction model - 5,321 images, matching the 2018 paper"
+             if repro else
+             "production model - all 11,219 available images")
+    print("=" * 70)
     print("  Structural Damage Classifier")
     print("  InceptionV3 (ImageNet, frozen) + trained FC/softmax head")
+    print(f"  {which}")
     print(f"  device: {DEV}   input: {size}x{size}")
-    print("=" * 66)
+    print("=" * 70)
 
 
 def run_single(path, head, size, show):
@@ -209,10 +222,13 @@ def main():
     ap.add_argument("--size", type=int, default=299, choices=[224, 299])
     ap.add_argument("--show", action="store_true",
                     help="open the figure after writing it")
+    ap.add_argument("--repro", action="store_true",
+                    help="use the paper-matched reproduction model (5321 "
+                         "images) instead of the production model")
     args = ap.parse_args()
 
-    banner(args.size)
-    head = load_head(args.size)
+    banner(args.size, repro=args.repro)
+    head = load_head(args.size, repro=args.repro)
 
     if args.image:
         run_single(args.image, head, args.size, args.show)
