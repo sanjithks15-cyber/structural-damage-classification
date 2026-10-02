@@ -169,6 +169,21 @@ uv pip install -r requirements.txt
 .venv/bin/python repro/export_images.py
 ```
 
+### Live demo
+
+`repro/demo.py` loads the saved classifier head and runs in a couple of
+seconds — no training, no network.
+
+```bash
+.venv/bin/python repro/demo.py                 # classify 8 random unseen images
+.venv/bin/python repro/demo.py --score         # full metrics on the test set
+.venv/bin/python repro/demo.py --errors        # the model's worst mistakes
+.venv/bin/python repro/demo.py --image photo.jpg   # any image file
+```
+
+Add `--show` to open the figure, `--seed N` to reproduce a particular sample,
+`--size 224` to use the paper's input resolution instead of 299.
+
 Runtimes on the reference machine: data preparation ~3 min, baselines ~4 min,
 feature extraction 11 s, head training ~20 s, learning curve ~6 min.
 
