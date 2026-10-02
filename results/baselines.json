@@ -1,0 +1,94 @@
+[
+  {
+    "model": "KNN (k=5)",
+    "train_acc": 0.7128,
+    "val_acc": 0.5084,
+    "n_train": 5321,
+    "n_val": 592,
+    "val_confusion": [
+      [
+        166,
+        150
+      ],
+      [
+        141,
+        135
+      ]
+    ],
+    "majority_baseline_val": 0.5338,
+    "peak_rss_gb": 1.57,
+    "seconds": 3.3,
+    "backend": "exact brute force on cuda"
+  },
+  {
+    "model": "Logistic Regression",
+    "train_acc": 0.9981,
+    "val_acc": 0.5405,
+    "n_train": 5321,
+    "n_val": 592,
+    "val_confusion": [
+      [
+        199,
+        117
+      ],
+      [
+        155,
+        121
+      ]
+    ],
+    "majority_baseline_val": 0.5338,
+    "peak_rss_gb": 4.78,
+    "seconds": 317.8,
+    "n_iter": 1000,
+    "coef_dtype": "float32",
+    "converged": false
+  },
+  {
+    "model": "SVM (RBF, C=1.0, gamma=0.001) [paper protocol, 2700 train]",
+    "train_acc": 0.9763,
+    "val_acc": 0.4662,
+    "n_train": 2700,
+    "n_val": 592,
+    "val_confusion": [
+      [
+        0,
+        316
+      ],
+      [
+        0,
+        276
+      ]
+    ],
+    "majority_baseline_val": 0.5338,
+    "peak_rss_gb": 4.78,
+    "seconds": 1.2,
+    "n_support_vectors": 2294,
+    "kernel_offdiag_mean": 0.010762556331133172,
+    "kernel_offdiag_max": 0.9998315572738647,
+    "backend": "precomputed RBF Gram on GPU + libsvm"
+  },
+  {
+    "model": "SVM (RBF, C=1.0, gamma=0.001) [full 5321 train]",
+    "train_acc": 0.9494,
+    "val_acc": 0.5777,
+    "n_train": 5321,
+    "n_val": 592,
+    "val_confusion": [
+      [
+        255,
+        61
+      ],
+      [
+        189,
+        87
+      ]
+    ],
+    "majority_baseline_val": 0.5338,
+    "peak_rss_gb": 4.78,
+    "seconds": 3.0,
+    "n_support_vectors": 5145,
+    "kernel_offdiag_mean": 0.007250767951045211,
+    "kernel_offdiag_max": 0.9998574256896973,
+    "backend": "precomputed RBF Gram on GPU + libsvm"
+  }
+]

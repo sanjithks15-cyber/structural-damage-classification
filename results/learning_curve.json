@@ -1,0 +1,92 @@
+[
+  {
+    "n_train": 200,
+    "n_train_actual": 200,
+    "train_acc_mean": 1.0,
+    "train_acc_std": 0.0,
+    "val_acc_mean": 0.7353603603603603,
+    "val_acc_std": 0.0028710695459418577,
+    "gap": 0.26463963963963966
+  },
+  {
+    "n_train": 400,
+    "n_train_actual": 400,
+    "train_acc_mean": 1.0,
+    "train_acc_std": 0.0,
+    "val_acc_mean": 0.7460585585585585,
+    "val_acc_std": 0.006517926184003485,
+    "gap": 0.2539414414414415
+  },
+  {
+    "n_train": 800,
+    "n_train_actual": 800,
+    "train_acc_mean": 0.9995833333333334,
+    "train_acc_std": 0.000589255650988777,
+    "val_acc_mean": 0.7612612612612613,
+    "val_acc_std": 0.029007312775655984,
+    "gap": 0.23832207207207212
+  },
+  {
+    "n_train": 1200,
+    "n_train_actual": 1200,
+    "train_acc_mean": 0.9847222222222222,
+    "train_acc_std": 0.003356401659331851,
+    "val_acc_mean": 0.7697072072072072,
+    "val_acc_std": 0.006941907661001101,
+    "gap": 0.21501501501501497
+  },
+  {
+    "n_train": 1800,
+    "n_train_actual": 1800,
+    "train_acc_mean": 0.9535185185185185,
+    "train_acc_std": 0.0015930231976005074,
+    "val_acc_mean": 0.7775900900900901,
+    "val_acc_std": 0.007596136015333363,
+    "gap": 0.17592842842842848
+  },
+  {
+    "n_train": 2500,
+    "n_train_actual": 2500,
+    "train_acc_mean": 0.9344,
+    "train_acc_std": 0.005070174224488396,
+    "val_acc_mean": 0.7871621621621622,
+    "val_acc_std": 0.009654520382591339,
+    "gap": 0.14723783783783784
+  },
+  {
+    "n_train": 3200,
+    "n_train_actual": 3200,
+    "train_acc_mean": 0.9140625,
+    "train_acc_std": 0.006470083397195621,
+    "val_acc_mean": 0.8018018018018017,
+    "val_acc_std": 0.003470953830500553,
+    "gap": 0.11226069819819828
+  },
+  {
+    "n_train": 4000,
+    "n_train_actual": 4000,
+    "train_acc_mean": 0.8973333333333334,
+    "train_acc_std": 0.005221483399273521,
+    "val_acc_mean": 0.8006756756756758,
+    "val_acc_std": 0.0013792171975130591,
+    "gap": 0.09665765765765766
+  },
+  {
+    "n_train": 4700,
+    "n_train_actual": 4700,
+    "train_acc_mean": 0.8894326241134752,
+    "train_acc_std": 0.002893060716932043,
+    "val_acc_mean": 0.8074324324324325,
+    "val_acc_std": 0.007166622782296108,
+    "gap": 0.08200019168104278
+  },
+  {
+    "n_train": 5321,
+    "n_train_actual": 5321,
+    "train_acc_mean": 0.8867380818141953,
+    "train_acc_std": 0.0008451254503058297,
+    "val_acc_mean": 0.8006756756756758,
+    "val_acc_std": 0.004972838325635055,
+    "gap": 0.08606240613851956
+  }
+]

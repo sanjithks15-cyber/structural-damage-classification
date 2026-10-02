@@ -1,0 +1,22 @@
+# data + model artifacts (too large / licensed, not for git)
+data/
+*.npy
+*.zip
+*.pt
+*.pth
+*.pkl
+
+# environment
+.venv/
+__pycache__/
+*.pyc
+
+# outputs
+results/figures/*.png
+results/*.csv
+
+# browsable export (regenerable from data/processed)
+data/preview/
+# cached CNN features + model weights (regenerable)
+results/features/
+*.pt
