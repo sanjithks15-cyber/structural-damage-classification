@@ -189,6 +189,14 @@ feature extraction 11 s, head training ~20 s, learning curve ~6 min.
 
 ---
 
+## Learning path
+
+`docs/COURSE.md` rebuilds this project from scratch as a nine-module course,
+with verifiable checkpoints, deliberate traps and a hint ladder. Work in
+`practice/` (git-ignored) and keep notes in `practice/NOTES.md`.
+
+---
+
 ## Layout
 
 ```

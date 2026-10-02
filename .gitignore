@@ -23,3 +23,7 @@ results/features/
 # each and are what repro/demo.py loads.
 *.pt
 !results/head_incv3_*.pt
+
+# your own practice work (Module work, see docs/COURSE.md)
+practice/*
+!practice/NOTES.md
