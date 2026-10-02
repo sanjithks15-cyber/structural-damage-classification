@@ -181,15 +181,16 @@ def build():
 
     S.append(Paragraph(
         "The paper's central claim reproduces cleanly: classical models on raw "
-        "pixels are statistically indistinguishable from a constant guess "
-        "despite 97–99% training accuracy, while transfer learning reaches "
-        "roughly 80%. The SVM is not merely weak but <b>degenerate</b> — under "
-        "the paper's protocol its validation confusion matrix is "
-        "[[0, 316], [0, 276]], meaning it predicts <i>damaged</i> for every "
-        "image; its accuracy is simply the damaged fraction of the set. With "
-        "150,528 features and 5,321 examples the models have 28 times more "
-        "parameters than data points, and an RBF kernel of width "
-        "&gamma;=0.001 over such distances is far too narrow to generalise.", body))
+        "pixels are at best a couple of points above a constant guess despite "
+        "95–99% training accuracy, while transfer learning reaches roughly "
+        "80%. With 150,528 features and 5,321 examples the models have 28 "
+        "times more parameters than data points, so memorisation is free and "
+        "generalisation is not; an RBF kernel of width &gamma;=0.001 over "
+        "these distances is in addition far too narrow to generalise. One "
+        "methodological note: the saved splits are ordered by class, so "
+        "slicing the first N rows is not a sample. All subsampling here is "
+        "stratified under a fixed seed, and the scripts report the class "
+        "balance actually trained on.", body))
 
     pc = err.get("paper_confusion_accuracy", 0.797)
     S.append(Paragraph(

@@ -45,26 +45,26 @@
   },
   {
     "model": "SVM (RBF, C=1.0, gamma=0.001) [paper protocol, 2700 train]",
-    "train_acc": 0.9763,
-    "val_acc": 0.4662,
+    "train_acc": 0.9511,
+    "val_acc": 0.5591,
     "n_train": 2700,
     "n_val": 592,
     "val_confusion": [
       [
-        0,
-        316
+        256,
+        60
       ],
       [
-        0,
-        276
+        201,
+        75
       ]
     ],
     "majority_baseline_val": 0.5338,
-    "peak_rss_gb": 4.78,
-    "seconds": 1.2,
-    "n_support_vectors": 2294,
-    "kernel_offdiag_mean": 0.010762556331133172,
-    "kernel_offdiag_max": 0.9998315572738647,
+    "peak_rss_gb": 1.38,
+    "seconds": 1.8,
+    "n_support_vectors": 2613,
+    "kernel_offdiag_mean": 0.0078971684665843,
+    "kernel_offdiag_max": 0.9997696280479431,
     "backend": "precomputed RBF Gram on GPU + libsvm"
   },
   {
@@ -84,8 +84,8 @@
       ]
     ],
     "majority_baseline_val": 0.5338,
-    "peak_rss_gb": 4.78,
-    "seconds": 3.0,
+    "peak_rss_gb": 1.88,
+    "seconds": 3.2,
     "n_support_vectors": 5145,
     "kernel_offdiag_mean": 0.007250767951045211,
     "kernel_offdiag_max": 0.9998574256896973,

@@ -41,7 +41,7 @@ Validation accuracy on 592 images. Majority-class baseline: **53.4%**.
 |---|---|---|---|---|
 | K-nearest neighbours (k=5) | 67.4% | 53.7% | 71.3% | 50.8% |
 | Logistic regression | 99.4% | 54.7% | 99.8% | 54.0% |
-| SVM (RBF, C=1, γ=0.001) | 99.7% | 50.7% | 97.6% | 46.6% |
+| SVM (RBF, C=1, γ=0.001) | 99.7% | 50.7% | 95.1% | 55.9% |
 | **InceptionV3, frozen + FC/softmax** | **81.0%** | **83.0%** | **88.6%** | **79.6%** |
 | *— same, 299×299 input (ours)* | — | — | 87.6% | **81.8%** |
 | *— SVM on all 5,321 images (ours)* | — | — | 94.9% | 57.8% |
@@ -61,6 +61,10 @@ Ours, held-out test (1460):[[581, 134],   accuracy 81.2%
                             [140, 605]]
 ```
 
+A note on method: the saved splits are sorted by class, so taking the first N
+rows is not a sample. All subsampling in this repository is stratified with a
+fixed seed, and `baselines.py` prints the class balance it actually trained on.
+
 The paper's Table 1 reports 83.0%, but its own §5.3 confusion matrix implies
 **79.7%** — which our reproduction matches to within 0.1 points.
 
@@ -72,9 +76,10 @@ The paper's Table 1 reports 83.0%, but its own §5.3 confusion matrix implies
 indistinguishable from a constant guess (50–54% against a 53.4% baseline)
 despite 97–99% training accuracy. Transfer learning reaches ~80%.
 
-**2. The SVM is degenerate, not merely weak.** Under the paper's protocol its
-validation confusion matrix is `[[0, 316], [0, 276]]` — it predicts "damaged"
-for every image. Its 46.6% is just the damaged fraction of the set.
+**2. Classical models memorise without learning.** The SVM reaches 95.1%
+training accuracy and 55.9% validation — 2.5 points above a 53.4% baseline.
+With 150,528 features and 5,321 examples there are 28× more parameters than
+data points, so memorisation is free and generalisation is not.
 
 **3. We disagree with the paper's bias diagnosis.** The paper read its learning
 curve as "clearly a bias issue" and added capacity in response. Our curve shows

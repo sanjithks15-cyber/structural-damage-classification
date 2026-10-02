@@ -81,33 +81,59 @@ def peak_rss_gb():
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024
 
 
+def subsample_indices(y, limit, seed=229):
+    """Pick `limit` rows at random, preserving the class ratio.
+
+    The saved splits are SORTED by class (prepare_data.py sorts by source
+    index, and the distribution groups the classes). So `X[:limit]` is not a
+    sample -- it is almost entirely one class. The paper sliced a SHUFFLED
+    array, so a stratified random draw is what reproduces its protocol.
+    Indices are returned sorted, which keeps the memory-mapped reads sequential.
+    """
+    if limit is None or limit >= len(y):
+        return None
+    rng = np.random.default_rng(seed)
+    keep = []
+    for cls in np.unique(y):
+        pool = np.flatnonzero(y == cls)
+        k = int(round(limit * len(pool) / len(y)))
+        keep.append(rng.choice(pool, min(k, len(pool)), replace=False))
+    return np.sort(np.concatenate(keep))
+
+
 def load_gpu(split, limit=None, block=256):
     """Stream a split onto the GPU as flattened float32 in [0,1].
 
     Host RAM never holds more than one `block` of images.
     """
     x = np.load(DATA / f"X_{split}.npy", mmap_mode="r")
-    y = np.load(DATA / f"y_{split}.npy")
-    n = len(x) if limit is None else min(limit, len(x))
-    out = torch.empty((n, 224 * 224 * 3), dtype=torch.float32, device=DEV)
-    for i in range(0, n, block):
-        j = min(i + block, n)
-        chunk = torch.from_numpy(np.ascontiguousarray(x[i:j])).to(DEV)
-        out[i:j] = chunk.reshape(j - i, -1).float().div_(255.0)
-    return out, y[:n].astype(np.int64)
+    y = np.load(DATA / f"y_{split}.npy").astype(np.int64)
+    idx = subsample_indices(y, limit)
+    if idx is None:
+        idx = np.arange(len(y))
+    out = torch.empty((len(idx), 224 * 224 * 3), dtype=torch.float32,
+                      device=DEV)
+    for i in range(0, len(idx), block):
+        sl = idx[i : i + block]
+        chunk = torch.from_numpy(np.ascontiguousarray(x[sl])).to(DEV)
+        out[i : i + len(sl)] = chunk.reshape(len(sl), -1).float().div_(255.0)
+    return out, y[idx]
 
 
 def load_host(split, limit=None, block=256):
     """Same thing but as a host float32 array (needed by sklearn's lbfgs)."""
     x = np.load(DATA / f"X_{split}.npy", mmap_mode="r")
-    y = np.load(DATA / f"y_{split}.npy")
-    n = len(x) if limit is None else min(limit, len(x))
-    out = np.empty((n, 224 * 224 * 3), dtype=np.float32)
-    for i in range(0, n, block):
-        j = min(i + block, n)
-        out[i:j] = np.asarray(x[i:j], dtype=np.float32).reshape(j - i, -1)
+    y = np.load(DATA / f"y_{split}.npy").astype(np.int64)
+    idx = subsample_indices(y, limit)
+    if idx is None:
+        idx = np.arange(len(y))
+    out = np.empty((len(idx), 224 * 224 * 3), dtype=np.float32)
+    for i in range(0, len(idx), block):
+        sl = idx[i : i + block]
+        out[i : i + len(sl)] = np.asarray(x[sl], dtype=np.float32).reshape(
+            len(sl), -1)
     out /= 255.0
-    return out, y[:n].astype(np.int64)
+    return out, y[idx]
 
 
 def column_mean(X, block=512):
@@ -248,6 +274,9 @@ def run_svm(results, n_limit=None, tag=""):
     t0 = time.time()
     Xtr, ytr = load_gpu("train", limit=n_limit)
     Xva, yva = load_gpu("val")
+    print(f"  [balance] trained on {len(ytr)} images: "
+          f"{(ytr==1).sum()} damaged ({(ytr==1).mean():.1%}), "
+          f"{(ytr==0).sum()} undamaged ({(ytr==0).mean():.1%})")
     center_(Xtr, Xva, mu=column_mean(Xtr))
     Ktr = rbf_gram(Xtr, Xtr, SVM_GAMMA)
     Kva = rbf_gram(Xva, Xtr, SVM_GAMMA)
