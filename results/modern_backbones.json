@@ -1,0 +1,103 @@
+{
+  "inceptionv3": {
+    "dim": 2048,
+    "linear": {
+      "val_mean": 0.8170045045045046,
+      "val_std": 0.0007962914202550999,
+      "test_mean": 0.8228310502283106,
+      "test_std": 0.00032287980876099235
+    },
+    "svm": {
+      "val": 0.839527027027027,
+      "test": 0.8383561643835616
+    },
+    "timm_id": "inception_v3.tv_in1k",
+    "year": 2015,
+    "size": 299
+  },
+  "resnet50": {
+    "dim": 2048,
+    "linear": {
+      "val_mean": 0.8440315315315315,
+      "val_std": 0.0021067890691294647,
+      "test_mean": 0.8308219178082191,
+      "test_std": 0.0014796211640200618
+    },
+    "svm": {
+      "val": 0.8665540540540541,
+      "test": 0.8445205479452055
+    },
+    "timm_id": "resnet50.a1_in1k",
+    "year": 2015,
+    "size": 224
+  },
+  "efficientnetv2": {
+    "dim": 1792,
+    "linear": {
+      "val_mean": 0.8434684684684685,
+      "val_std": 0.0021067890691294647,
+      "test_mean": 0.8568493150684932,
+      "test_std": 0.002016383759435567
+    },
+    "svm": {
+      "val": 0.8665540540540541,
+      "test": 0.8815068493150685
+    },
+    "timm_id": "efficientnetv2_rw_s.ra2_in1k",
+    "year": 2021,
+    "size": 288
+  },
+  "swin_tiny": {
+    "dim": 768,
+    "linear": {
+      "val_mean": 0.8355855855855855,
+      "val_std": 0.004213578138258969,
+      "test_mean": 0.8504566210045663,
+      "test_std": 0.002642885137623349
+    },
+    "svm": {
+      "val": 0.8547297297297297,
+      "test": 0.8589041095890411
+    },
+    "timm_id": "swin_tiny_patch4_window7_224.ms_in1k",
+    "year": 2021,
+    "size": 224
+  },
+  "convnext_tiny": {
+    "dim": 768,
+    "linear": {
+      "val_mean": 0.8372747747747749,
+      "val_std": 0.0021067890691294647,
+      "test_mean": 0.8472602739726027,
+      "test_std": 0.0022369769340485554
+    },
+    "svm": {
+      "val": 0.8496621621621622,
+      "test": 0.8657534246575342
+    },
+    "timm_id": "convnext_tiny.fb_in1k",
+    "year": 2022,
+    "size": 224
+  },
+  "ensemble": {
+    "members": [
+      "resnet50",
+      "efficientnetv2",
+      "swin_tiny"
+    ],
+    "test_acc": 0.8753424657534247,
+    "test_confusion": [
+      [
+        653,
+        62
+      ],
+      [
+        120,
+        625
+      ]
+    ],
+    "damaged_recall": 0.8389,
+    "damaged_precision": 0.9098,
+    "all_members_wrong_on": 112
+  }
+}
