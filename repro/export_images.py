@@ -110,8 +110,7 @@ def main():
 
     size = sum(f.stat().st_size for f in PREVIEW.rglob("*.jpg"))
     print(f"\nTotal preview size: {size/2**20:.0f} MB at {PREVIEW}")
-    print("Browse with your file manager, or:  xdg-open "
-          f"{PREVIEW/'train'/'damaged'}")
+    print(f"Browse them in your file manager: {PREVIEW / 'train' / 'damaged'}")
 
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ Use --show to pop the figure open.
 """
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -99,8 +100,21 @@ def show_grid(imgs, titles, suptitle, out, show=False, cols=4):
     plt.close(fig)
     print(f"\nfigure: {out}")
     if show:
-        subprocess.Popen(["xdg-open", str(out)],
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        open_file(out)
+
+
+def open_file(path):
+    """Open a file in the system viewer, on any platform."""
+    try:
+        if sys.platform == "win32":
+            os.startfile(path)                                  # noqa: S606
+        else:
+            opener = "open" if sys.platform == "darwin" else "xdg-open"
+            subprocess.Popen([opener, str(path)],
+                             stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL)
+    except Exception as exc:
+        print(f"  (could not open the figure automatically: {exc})")
 
 
 def banner(size, repro=False):

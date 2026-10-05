@@ -42,7 +42,6 @@ Usage:
 
 import argparse
 import json
-import resource
 import time
 from pathlib import Path
 
@@ -71,14 +70,55 @@ torch.backends.cuda.matmul.allow_tf32 = False
 
 
 def mem_available_gb():
-    for line in open("/proc/meminfo"):
-        if line.startswith("MemAvailable:"):
-            return int(line.split()[1]) / 1024 / 1024
+    """Free RAM in GB, or nan where the platform does not expose it.
+
+    /proc/meminfo is Linux-only; these diagnostics are informational, so on
+    other platforms we report nan rather than failing.
+    """
+    try:
+        with open("/proc/meminfo") as fh:
+            for line in fh:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1]) / 1024 / 1024
+    except OSError:
+        pass
     return float("nan")
 
 
 def peak_rss_gb():
-    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024
+    """Peak resident memory in GB, or nan where unavailable.
+
+    `resource` is Unix-only. Windows exposes the same figure through the Win32
+    API, so fall back to that before giving up.
+    """
+    try:
+        import resource
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024
+    except ImportError:
+        pass
+    try:                                    # Windows
+        import ctypes
+        from ctypes import wintypes
+
+        class _Counters(ctypes.Structure):
+            _fields_ = [("cb", wintypes.DWORD),
+                        ("PageFaultCount", wintypes.DWORD),
+                        ("PeakWorkingSetSize", ctypes.c_size_t),
+                        ("WorkingSetSize", ctypes.c_size_t),
+                        ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                        ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                        ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                        ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                        ("PagefileUsage", ctypes.c_size_t),
+                        ("PeakPagefileUsage", ctypes.c_size_t)]
+
+        c = _Counters()
+        c.cb = ctypes.sizeof(c)
+        ctypes.windll.psapi.GetProcessMemoryInfo(
+            ctypes.windll.kernel32.GetCurrentProcess(), ctypes.byref(c), c.cb)
+        return c.PeakWorkingSetSize / 2 ** 30
+    except Exception:
+        return float("nan")
 
 
 def subsample_indices(y, limit, seed=229):
