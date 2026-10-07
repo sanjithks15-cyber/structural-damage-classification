@@ -129,6 +129,16 @@ uses the paper-matched model instead of the production one.
 | `make_writeup.py` | generates `docs/writeup.pdf` from `results/*.json` |
 | `demo.py` | live demonstration |
 
+### `improvements/` — work that goes beyond the paper
+
+| File | Purpose |
+|---|---|
+| `README.md` | **what we changed and what each change was worth** |
+| `modern_backbones.py` | InceptionV3 (2015) vs ResNet50, EfficientNetV2, Swin, ConvNeXt |
+| `operating_point.py` | decision threshold as a safety/cost trade-off; ROC AUC and calibration |
+
+Reproduction 81.2% → best model **88.2%** on the same held-out test set.
+
 ### Everything else
 
 | Path | Contents |

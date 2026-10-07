@@ -15,22 +15,6 @@
     "year": 2015,
     "size": 299
   },
-  "resnet50": {
-    "dim": 2048,
-    "linear": {
-      "val_mean": 0.8440315315315315,
-      "val_std": 0.0021067890691294647,
-      "test_mean": 0.8308219178082191,
-      "test_std": 0.0014796211640200618
-    },
-    "svm": {
-      "val": 0.8665540540540541,
-      "test": 0.8445205479452055
-    },
-    "timm_id": "resnet50.a1_in1k",
-    "year": 2015,
-    "size": 224
-  },
   "efficientnetv2": {
     "dim": 1792,
     "linear": {
@@ -47,57 +31,24 @@
     "year": 2021,
     "size": 288
   },
-  "swin_tiny": {
-    "dim": 768,
-    "linear": {
-      "val_mean": 0.8355855855855855,
-      "val_std": 0.004213578138258969,
-      "test_mean": 0.8504566210045663,
-      "test_std": 0.002642885137623349
-    },
-    "svm": {
-      "val": 0.8547297297297297,
-      "test": 0.8589041095890411
-    },
-    "timm_id": "swin_tiny_patch4_window7_224.ms_in1k",
-    "year": 2021,
-    "size": 224
-  },
-  "convnext_tiny": {
-    "dim": 768,
-    "linear": {
-      "val_mean": 0.8372747747747749,
-      "val_std": 0.0021067890691294647,
-      "test_mean": 0.8472602739726027,
-      "test_std": 0.0022369769340485554
-    },
-    "svm": {
-      "val": 0.8496621621621622,
-      "test": 0.8657534246575342
-    },
-    "timm_id": "convnext_tiny.fb_in1k",
-    "year": 2022,
-    "size": 224
-  },
   "ensemble": {
     "members": [
-      "resnet50",
       "efficientnetv2",
-      "swin_tiny"
+      "inceptionv3"
     ],
-    "test_acc": 0.8753424657534247,
+    "test_acc": 0.8678082191780822,
     "test_confusion": [
       [
-        653,
-        62
+        648,
+        67
       ],
       [
-        120,
-        625
+        126,
+        619
       ]
     ],
-    "damaged_recall": 0.8389,
-    "damaged_precision": 0.9098,
-    "all_members_wrong_on": 112
+    "damaged_recall": 0.8309,
+    "damaged_precision": 0.9023,
+    "all_members_wrong_on": 132
   }
 }
