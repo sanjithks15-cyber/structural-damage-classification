@@ -170,6 +170,115 @@ Reproduction 81.2% → best model **88.5%** on the same held-out test set.
 
 ---
 
+### Windows
+
+For Windows, use the Windows-compatible baseline verification script:
+
+```powershell
+python windows\baselines_windows.py --verify
+
+\`\`\`
+
+Approximate runtimes: step 1 \~3 min, step 3 \~4 min, step 4 \~30 s,
+
+step 5 \~6 min, step 6 \~6 min.
+
+**### Live demo**
+
+\`\`\`bash
+
+.venv/bin/python repro/demo.py                     # classify 8 unseen images
+
+.venv/bin/python repro/demo.py --score             # metrics on the test set
+
+.venv/bin/python repro/demo.py --errors            # the model's worst mistakes
+
+.venv/bin/python repro/demo.py --image photo.jpg   # any image file
+
+\`\`\`
+
+\`--show\` opens the figure, \`--seed N\` repeats a particular sample, \`--repro\`
+
+uses the paper-matched model instead of the production one.
+
+**---**
+
+**## 5. What each file does**
+
+**### \`repro/\` — all analysis code, written for this study**
+
+\| File | Purpose |
+
+\|---|---|
+
+\| \`prepare_data.py\` | builds the splits; undoes the BGR mean-subtraction and the label inversion |
+
+\| \`verify_labels.py\` | checks the label polarity three ways |
+
+\| \`raw_label_check.py\` | shows raw labels verbatim; writes the source-index mapping |
+
+\| \`baselines.py\` | KNN, logistic regression, RBF SVM (\`--verify\` checks the GPU maths against scikit-learn) |
+
+\| \`inception_transfer.py\` | frozen InceptionV3 + linear head — the paper's model |
+
+\| \`extract_pool_features.py\` | features for all 11,811 pool images |
+
+\| \`train_full.py\` | **\*\*production model\*\*** — all data, native resolution |
+
+\| \`learning_curve.py\` | bias/variance diagnostic |
+
+\| \`error_analysis.py\` | confusion matrices and misclassified-image galleries |
+
+\| \`export_images.py\` | dataset → browsable JPEGs |
+
+\| \`make_writeup.py\` | generates \`docs/writeup.pdf\` from \`results/\*.json\` |
+
+\| \`demo.py\` | live demonstration |
+
+**### Everything else**
+
+\| Path | Contents |
+
+\|---|---|
+
+\| \`docs/writeup.pdf\` | the two-page write-up — **\*\*start here for results\*\*** |
+
+\| \`results/\*.json\` | every metric reported, written by the scripts above |
+
+\| \`results/head\_\*.pt\` | the trained classifiers (18 KB each) — what \`demo.py\` loads |
+
+\| \`data/\` | dataset — git-ignored, created by \`prepare_data.py\` |
+
+**---**
+
+**## 6. Troubleshooting**
+
+\| Symptom | Cause |
+
+\|---|---|
+
+\| \`Missing [...] in data/raw/extracted\` | dataset zips not in \`data/raw/\` |
+
+\| \`BadZipFile\` | truncated download — recheck the byte counts in §2 |
+
+\| \`incv3\_\*.npy missing\` | run \`inception_transfer.py --extract\` before \`--train\` |
+
+\| \`head_full_299.pt not found\` | run \`train_full.py\`, or pass \`--repro\` to the demo |
+
+\| \`CUDA out of memory\` | close other GPU programs; the baselines need \~4 GB VRAM |
+
+\| Machine swaps during the baselines | expected under 8 GB free RAM |
+
+**---**
+
+**## License**
+
+Analysis code: MIT. The Φ-Net dataset is CC BY-NC-SA 4.0 and is not
+
+redistributed here.
+
+---
+
 ## 6. Troubleshooting
 
 | Symptom | Cause |
