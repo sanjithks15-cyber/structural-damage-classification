@@ -6,10 +6,25 @@ measured separately on the same untouched 1,460-image Φ-Net test split.
 
 ```
 faithful reproduction (paper's exact configuration)   81.2%
-our best model                                        88.2%
+  + native 299px input, all 11,219 images             82.7%
+  + modern backbone (EfficientNetV2) and an SVM       88.2%
+  + ensemble of three modern backbones                88.5%
                                                       ──────
-                                                      +7.0 points
+                                                      +7.3 points
 ```
+
+Head to head against the paper's backbone, same test set, same pipeline:
+
+| | InceptionV3 | ours | change |
+|---|---|---|---|
+| accuracy | 83.8% | **88.5%** | **+4.7** |
+| ROC AUC | 0.914 | **0.943** | +0.029 |
+| damaged recall | 81.2% | **87.0%** | +5.8 |
+| damaged buildings missed | 140 | **97** | **−43** |
+| false alarms | 134 | **94** | −40 |
+
+Both error types fall at once, which means the features improved rather than
+the operating point shifting.
 
 ---
 
@@ -111,7 +126,46 @@ Figure: `results/figures/07_operating_point.png`
 
 ---
 
-## 3. Improvements implemented inside `repro/`
+## 3. `best_model.py` — the unconstrained best model
+
+Nothing here is constrained by the paper. All 11,219 training images, modern
+backbones, **test-time augmentation** (each image passed through the backbone
+normally and horizontally mirrored, the two feature vectors averaged), and
+model selection by **3-fold cross-validation over the training set** rather
+than by the 592-image validation split.
+
+The cross-validation was the point: section 1 showed validation cannot
+distinguish two backbones that differ by 3.7 points on test. Cross-validation
+uses thousands of held-out images per decision instead of 592.
+
+**It did not fix the problem.** The CV ranking was exactly backwards:
+
+| Backbone | CV accuracy | Test accuracy |
+|---|---|---|
+| Swin-T | 0.8574 ← CV winner | 86.9% ← worst |
+| ConvNeXt-T | 0.8552 | 87.0% |
+| EfficientNetV2 | 0.8534 ← CV last | 88.2% ← best |
+
+The CV spread is 0.4 points against a fold-to-fold standard deviation of
+0.3–0.6, so the three are statistically indistinguishable and the ordering is
+noise. This is an honest negative result: **on a dataset this size you cannot
+reliably select the best backbone.**
+
+The answer is not to select at all. Averaging all three gives **88.5%**, above
+every member. Individually each is wrong on 173–236 of the 1,460 test images;
+all three are wrong on only **80**. They fail on different photographs, which
+is exactly the condition that makes ensembling work — and the opposite of what
+we found when ensembling two classifiers over the *same* features, where 188
+of 250 errors were shared and the ensemble gained nothing.
+
+```bash
+python improvements/best_model.py                # ~40 min, extracts features
+python improvements/best_model.py --skip-extract # reuses the cache
+```
+
+---
+
+## 4. Improvements implemented inside `repro/`
 
 Two further changes share the reproduction pipeline too closely to separate,
 so they live in `repro/train_full.py`:
@@ -130,7 +184,7 @@ data volume is no longer the binding constraint.
 
 ---
 
-## 4. Analyses with no counterpart in the paper
+## 5. Analyses with no counterpart in the paper
 
 **Bias/variance with error bars** (`repro/learning_curve.py`). The paper read
 its learning curve as "clearly a bias issue" and responded by adding capacity.
@@ -150,7 +204,7 @@ set it also used to make modelling decisions.
 
 ---
 
-## What we would do next
+## 6. What we would do next
 
 1. **k-fold cross-validation** for model selection, so the backbone choice is
    trustworthy rather than a coin flip between two tied candidates.

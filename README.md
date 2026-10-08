@@ -93,6 +93,23 @@ In order from the repository root — step 1 writes files the rest depend on.
 .venv/bin/python repro/make_writeup.py
 ```
 
+### Improvements over the paper
+
+See [`improvements/README.md`](improvements/README.md) for what each change was
+worth. These are independent of the reproduction above and can be run after
+step 1.
+
+```bash
+# compare InceptionV3 against ResNet50, EfficientNetV2, Swin, ConvNeXt
+.venv/bin/python improvements/modern_backbones.py
+
+# decision threshold as a safety/cost trade-off, ROC AUC, calibration
+.venv/bin/python improvements/operating_point.py --target-recall 0.90
+
+# the best model: all data, test-time augmentation, cross-validated selection
+.venv/bin/python improvements/best_model.py
+```
+
 Approximate runtimes: step 1 ~3 min, step 3 ~4 min, step 4 ~30 s,
 step 5 ~6 min, step 6 ~6 min.
 
@@ -136,8 +153,9 @@ uses the paper-matched model instead of the production one.
 | `README.md` | **what we changed and what each change was worth** |
 | `modern_backbones.py` | InceptionV3 (2015) vs ResNet50, EfficientNetV2, Swin, ConvNeXt |
 | `operating_point.py` | decision threshold as a safety/cost trade-off; ROC AUC and calibration |
+| `best_model.py` | the unconstrained best model: all data, TTA, cross-validated selection, ensemble |
 
-Reproduction 81.2% → best model **88.2%** on the same held-out test set.
+Reproduction 81.2% → best model **88.5%** on the same held-out test set.
 
 ### Everything else
 

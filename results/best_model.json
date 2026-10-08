@@ -1,0 +1,85 @@
+{
+  "backbone": "swin_tiny",
+  "svm_params": {
+    "C": "10.0",
+    "gamma": "scale"
+  },
+  "tta": true,
+  "n_train": 11219,
+  "folds": 3,
+  "cv_accuracy": 0.8574006687257986,
+  "cv_table": {
+    "efficientnetv2 C=1.0 gamma=scale": {
+      "cv_mean": 0.8469998677335361,
+      "cv_std": 0.0005278789875719775
+    },
+    "efficientnetv2 C=10.0 gamma=scale": {
+      "cv_mean": 0.8533983479414561,
+      "cv_std": 0.006242937969246567
+    },
+    "efficientnetv2 C=1.0 gamma=0.0001": {
+      "cv_mean": 0.7676002614603129,
+      "cv_std": 0.00426469046602875
+    },
+    "efficientnetv2 C=10.0 gamma=0.0001": {
+      "cv_mean": 0.8226000658211695,
+      "cv_std": 0.0005422724022306342
+    },
+    "convnext_tiny C=1.0 gamma=scale": {
+      "cv_mean": 0.8520005482696978,
+      "cv_std": 0.003938628337367032
+    },
+    "convnext_tiny C=10.0 gamma=scale": {
+      "cv_mean": 0.855199548325629,
+      "cv_std": 0.004459056828306304
+    },
+    "convnext_tiny C=1.0 gamma=0.0001": {
+      "cv_mean": 0.70999941668329,
+      "cv_std": 0.004866770606300476
+    },
+    "convnext_tiny C=10.0 gamma=0.0001": {
+      "cv_mean": 0.8208000656771407,
+      "cv_std": 0.000542054069161806
+    },
+    "swin_tiny C=1.0 gamma=scale": {
+      "cv_mean": 0.8554004685257427,
+      "cv_std": 0.0033734996191444578
+    },
+    "swin_tiny C=10.0 gamma=scale": {
+      "cv_mean": 0.8574006687257986,
+      "cv_std": 0.003232334141982548
+    },
+    "swin_tiny C=1.0 gamma=0.0001": {
+      "cv_mean": 0.8165995852450157,
+      "cv_std": 0.002447189341249528
+    },
+    "swin_tiny C=10.0 gamma=0.0001": {
+      "cv_mean": 0.8431997874134657,
+      "cv_std": 0.0007904991709941253
+    }
+  },
+  "val_acc": 0.8699324324324325,
+  "test_acc": 0.8691780821917808,
+  "roc_auc": 0.9431980100436477,
+  "test_confusion": [
+    [
+      621,
+      94
+    ],
+    [
+      97,
+      648
+    ]
+  ],
+  "damaged_precision": 0.8733,
+  "damaged_recall": 0.8698,
+  "ensemble": {
+    "test_acc": 0.8849315068493151,
+    "singles": {
+      "efficientnetv2": 0.8815068493150685,
+      "convnext_tiny": 0.8698630136986302,
+      "swin_tiny": 0.8691780821917808
+    },
+    "all_wrong_on": 80
+  }
+}
