@@ -45,7 +45,7 @@ stat -c '%s %n' data/raw/*.zip
 
 The distributed arrays are BGR with the ImageNet mean pre-subtracted, and their
 label convention is inverted relative to the paper's. `prepare_data.py` handles
-both; see [`docs/paper_spec.md`](docs/paper_spec.md) for details.
+both; `verify_labels.py` and `raw_label_check.py` check the result.
 
 ---
 
@@ -162,9 +162,6 @@ Reproduction 81.2% → best model **88.5%** on the same held-out test set.
 | Path | Contents |
 |---|---|
 | `docs/writeup.pdf` | the two-page write-up — **start here for results** |
-| `docs/paper_spec.md` | full specification extracted from the source paper |
-| `docs/COURSE.md` | nine-module guide to rebuilding the project from scratch |
-| `notebooks/learn.ipynb` | step-by-step walkthrough of the core ideas |
 | `results/` | metrics as JSON, figures, trained classifier heads |
 | `data/` | dataset — git-ignored, built by `prepare_data.py` |
 
