@@ -48,3 +48,6 @@ docs/COURSE.md
 docs/paper_spec.md
 notebooks/
 practice/
+
+# fitted SVMs and feature cache for the ensemble (regenerable, ~260 MB)
+results/best_model/
