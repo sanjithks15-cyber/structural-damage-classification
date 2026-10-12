@@ -306,7 +306,16 @@ def run_logreg(results):
                     {"seconds": round(time.time() - t0, 1),
                      "n_iter": int(clf.n_iter_[0]),
                      "coef_dtype": str(clf.coef_.dtype),
-                     "converged": bool(clf.n_iter_[0] < 1000)})
+                     "converged": bool(clf.n_iter_[0] < 1000),
+                     # lbfgs can abort its line search under memory pressure
+                     # and return after a handful of iterations, leaving the
+                     # model badly under-trained. Flag it rather than let a
+                     # silently wrong number into the results.
+                     "suspect_early_stop": bool(clf.n_iter_[0] < 50)})
+    if clf.n_iter_[0] < 50:
+        print(f"  WARNING: lbfgs stopped after only {clf.n_iter_[0]} "
+              f"iterations - this result is under-trained and should be "
+              f"re-run on a less loaded machine.")
     results.append(row)
 
 
